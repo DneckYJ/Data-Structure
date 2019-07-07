@@ -1,0 +1,57 @@
+//最短路径->Dijkstra算法
+//单元路径问题
+//基本思想： 对图设置集合S，存放已被访问过的顶点
+//每次从集合V-S中选择与起点s的最短距离最小的一个顶点（记为u）访问并加入集合S
+//令顶点u为中介点，优化起点s与所有从u能到达的顶点v之间的最短距离。
+//直到集合S已经包含所有顶点。
+//Dijkstra算法伪代码
+//begin
+//G为图，一般设成全局变量；数组d为源点到达各点的最短路径长度，s为起点
+Dijkstra(G,d[],s){
+    初始化
+    for(循环n次){
+        u = 使d[u]最小的还未被访问的顶点的标号；
+        记u已被访问
+        for(从u出发能达到的所有顶点v){
+             if(v未被访问&&以u为中介点使s到顶点v的最短距离d[v]更优
+                优化d[v];
+        }
+    }
+}
+
+//邻接表版
+const int maxv = 1000;             //最大顶点数
+const int INF = 1000000000;   
+
+struct Node{
+	int v,dis;             //v为边的目标顶点，dis为边权 
+};
+vector<Node> Adj[maxv];               //图G，Adj[u] 存放从顶点u出发可以到达的所有顶点
+int n ;                   //n为顶点数
+ind d[maxv];            //起点到达各顶点的最短路径长度
+bool vis[maxv] = {false};                  //标记数组，表示是否访问
+
+void Dijkstra(int s){
+	fill(d, d+maxv,INF);                  //fill函数将整个d数组赋为INF(慎用memset)
+	d[s] = 0;                          //起点s到达自身的距离为0
+	for(int i = 0; i < n; i++){
+		int u = -1,MIN - INF;                    //u使d[u]最小，MIN存放该最小的d[u]
+		for(int j = 0;j < n; j++){
+			if(vis[j] == false && d[j] < MIN){
+				u = j;
+				MIN = d[j];
+			} 
+		} 
+		//找不到小于INF的d[u],说明剩下的顶点和起点s不连通
+		if(u == -1) return;
+		vis[u] = true;
+		for(int j = 0; j < Adj[u].size();j++){
+			int v = Adj[u][j].v;
+			if(vis[v] == false && d[u] + Adj[u][j].dis < d[v]){
+				//如果v未访问&&已u为中介点可以使d[v]更优
+				d[v] = d[u] + Adj[u][j].dis; 
+			}
+		}
+	} 
+} 
+//end
